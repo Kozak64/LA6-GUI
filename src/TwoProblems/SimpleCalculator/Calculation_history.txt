@@ -1,0 +1,2 @@
+123 + 123 = 246
+123 / 0 = Cannot be divided by 0
