@@ -34,39 +34,50 @@ public class SimpleCalculator extends JFrame{
         cbOperations.setSelectedIndex(-1);
 
         btnCompute.addActionListener(e -> {
-            int number1 = Integer.parseInt(tfNumber1.getText());
-            int number2 = Integer.parseInt(tfNumber2.getText());
-            Operations op = (Operations)  cbOperations.getSelectedItem();
+            try {
+                int number1 = Integer.parseInt(tfNumber1.getText());
+                int number2 = Integer.parseInt(tfNumber2.getText());
+                Operations op = (Operations) cbOperations.getSelectedItem();
 
-            if (op == Operations.DIVIDE && number2 == 0){
-                lblResult.setText("Cannot be divided by 0");
-                SaveCalculation(tfNumber1.getText()+ " "+ op +" "+ tfNumber2.getText() + " = " + lblResult.getText());
-                return;
+                if (op == null) {
+                    return;
+                }
+                if (op == Operations.DIVIDE && number2 == 0) {
+                    lblResult.setText("Cannot be divided by 0");
+                    SaveCalculation(tfNumber1.getText() + " " + op + " " + tfNumber2.getText() + " = " + lblResult.getText());
+                    return;
+                }
+
+                double result = 0;
+                switch (op) {
+                    case PLUS:
+                        result = number1 + number2;
+                        break;
+                    case MULTIPLY:
+                        result = number1 * number2;
+                        break;
+                    case DIVIDE:
+                        result = (double) number1 / number2;
+                        break;
+                    case MINUS:
+                        result = number1 - number2;
+                        break;
+                }
+
+                if (result % 1 == 0) {    //include or not, not sure
+                    lblResult.setText(String.valueOf((int) result));
+                } else {
+                    lblResult.setText(String.format("%.2f", result));
+                }
+
+                SaveCalculation(tfNumber1.getText() + " " + op + " " + tfNumber2.getText() + " = " + lblResult.getText());
+            }catch(NumberFormatException ex){
+                lblResult.setText("");
             }
-
-            double result = 0;
-            switch (op) {
-                case PLUS: result = number1 + number2;
-                break;
-                case MULTIPLY: result = number1 * number2;
-                break;
-                case DIVIDE: result = (double) number1 / number2;
-                break;
-                case MINUS: result = number1 - number2;
-                break;
-            }
-
-            if(result % 1 == 0){    //include or not, not sure
-                lblResult.setText(String.valueOf((int)result));
-            }else{
-                lblResult.setText(String.format("%.2f",result));
-            }
-
-            SaveCalculation(tfNumber1.getText()+ " "+ op +" "+ tfNumber2.getText() + " = " + lblResult.getText());
         });
     }
 
-    private void SaveCalculation(String calculation){
+    private void SaveCalculation(String calc){
         String filename = "src/TwoProblems/SimpleCalculator/Calculation_history.txt";
         try{
             BufferedWriter bw = new BufferedWriter(new FileWriter(filename, true));
@@ -82,7 +93,7 @@ public class SimpleCalculator extends JFrame{
         }
     }
 
-    static void main() {
+     static void main() {
         SwingUtilities.invokeLater(()->{
             new SimpleCalculator().setVisible(true);
         });
